@@ -1,6 +1,8 @@
 import { Router, Response } from "express";
 import { TypedRequestBody } from "../types/express";
-import { login } from "../model/User-model";
+import { login, refereshToken } from "../model/User-model";
+import { checkToken } from "../model/checkToken";
+
 const router = Router();
 
 router.post(
@@ -15,6 +17,23 @@ router.post(
         } else {
             res.status(401).send("Invalid login or password");
         }
+    }
+);
+
+router.post(
+    "/checkToken",
+    (req: TypedRequestBody<{ accessToken: string }>, res: Response) => {
+        res.send(checkToken(req.body.accessToken));
+    }
+);
+
+router.post(
+    "/updateToken",
+    (
+        req: TypedRequestBody<{ accessToken: string; refreshToken: string }>,
+        res: Response
+    ) => {
+        res.send(refereshToken(req.body.refreshToken));
     }
 );
 
